@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
+
+import Categories from "../categories/Categories";
 
 const Restaurants = () => {
   const [restaurants, setRestaurants] = useState([]);
@@ -29,30 +32,22 @@ const Restaurants = () => {
     fetchData();
   }, []);
 
-  const handleCategoryClick = (e) => {
-    setCategory(e.target.value);
-  };
-
   return (
     <>
-      <div className="categories">
-        {categories.map((cat) => (
-          <label>
-            <input
-              type="radio"
-              value={cat}
-              name={cat}
-              checked={category === cat}
-              onClick={handleCategoryClick}
-            />
-            {cat}
-          </label>
-        ))}
-      </div>
+      <Categories
+        categories={categories}
+        category={category}
+        setCategory={setCategory}
+      />
       <div className="restaurants">
         {restaurants.map((restaurant) => {
           if (restaurant.category === category || category === "Any") {
-            return <p>{restaurant.name}</p>;
+            let link = `/restaurant/${restaurant.slug}`;
+            return (
+              <div className="restaurants__element">
+                <Link to={link}>{restaurant.name}</Link>
+              </div>
+            );
           }
         })}
       </div>
