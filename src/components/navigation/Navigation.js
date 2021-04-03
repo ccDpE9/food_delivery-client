@@ -1,31 +1,39 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const Navigation = () => (
-  <nav>
-    <ul>
-      <li>
-        <Link to="/">Home</Link>
-      </li>
-      {document.cookie.indexOf("jwt=") === -1 ? (
-        <>
-          <li>
-            <Link to="/register">Register</Link>
-          </li>
-          <li>
-            <Link to="/login">Login</Link>
-          </li>
-          <li>
-            <Link to="/cart">Cart</Link>
-          </li>
-        </>
-      ) : (
+const Navigation = () => {
+
+  const logout = () => {
+    localStorage.removeItem("jwt");
+  }
+
+  return (
+    <nav>
+      <ul>
         <li>
-          <Link to="/logout">Logout</Link>
+          <Link to="/">Home</Link>
         </li>
-      )}
-    </ul>
-  </nav>
-);
+        {localStorage.getItem("jwt") ? (
+          <>
+            <li>
+              <a href="/#" onClick={logout}>
+                Logout
+              </a>
+            </li>
+          </>
+        ) : (
+          <>
+            <li>
+              <Link to="/register">Register</Link>
+            </li>
+            <li>
+              <Link to="/login">Login</Link>
+            </li>
+          </>
+        )}
+      </ul>
+    </nav >
+  )
+};
 
 export default Navigation;
