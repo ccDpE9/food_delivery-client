@@ -1,7 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import Cart from "../cart/Cart";
+import useCart from "../cart/useCart";
 
 const Navigation = () => {
+  const { cartVisibility, toggle } = useCart();
 
   const logout = () => {
     localStorage.removeItem("jwt");
@@ -20,6 +23,11 @@ const Navigation = () => {
                 Logout
               </a>
             </li>
+            <li>
+              <a href="/#" onClick={toggle}>
+                Cart
+              </a>
+            </li>
           </>
         ) : (
           <>
@@ -32,6 +40,7 @@ const Navigation = () => {
           </>
         )}
       </ul>
+      <Cart cartVisibility={cartVisibility} toggle={toggle} />
     </nav >
   )
 };
