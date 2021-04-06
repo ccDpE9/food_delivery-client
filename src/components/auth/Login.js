@@ -1,55 +1,56 @@
 import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
+import { useWhyDidYouUpdate } from "ra-core";
+import { Redirect } from "react-router";
 
-const Auth = () => {
-  const [auth, setAuth] = useState({
-    email: "",
-    password: "",
-  });
+let schema = yup.object().shape({
+  email: yup.string().email(),
+  password: yup.string().required()
+})
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+const Login = () => {
+  const { register, handleSubmit, errors } = useForm({
+    resolver: yupResolver(schema),
+  })
 
-    // @TODO: Validatio inputs
-
-    const payload = {
-      email: auth.email,
-      password: auth.password,
-    };
-
+  const onSubmit = ({ email, password }) => {
     axios
-      .post("localhost:8080/login", payload)
-      .then((res) => {
-        if (res.status === 200) {
-          // @TODO:
-          // 1. notify login was successfull
-          // 2. redirect
-        } else {
-          // @TODO:
-          // 1. notify login was not successfull
+      .post("http://localhost:8080/login", { email, password })
+      .then(response => {
+        if (response.status < 200 || response.status >= 300) {
+          throw new Error(response.statusText);
         }
+
+        localStorage.setItem(
+          "jwt",
+          response.headers.authorization.split(" ")[1]
+        )
+
+        return <Redirect to="/" />
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(error);
-      });
-  };
-
-  const handleChange = (e) => {
-    const { id, value } = e.target;
-
-    setAuth((prevState) => ({
-      ...prevState,
-      [id]: value,
-    }));
-  };
+      })
+  }
 
   return (
     <div className="login">
-      <input type="text" id="email" onChange={handleChange} />
-      <input type="password" id="password" onChange={handleChange} />
-      <button onClick={handleSubmit}>Login</button>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <label htmlFor="email">Email</label>
+        <input name="email" ref={register} />
+        <p>{errors.email?.message}</p>
+
+        <label htmlFor="password">Password</label>
+        <input name="password" type="password" ref={register} />
+        <p>{errors.password?.message}</p>
+
+        <input type="submit" value="Submit" />
+      </form>
     </div>
   );
 };
 
-export default Auth;
+export default Login;
