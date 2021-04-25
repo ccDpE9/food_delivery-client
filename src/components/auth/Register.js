@@ -17,7 +17,7 @@ let schema = yup.object().shape({
 });
 
 const Register = () => {
-  const { register, handleSubmit, errors, setError } = useForm({
+  const { register, handleSubmit, formState: { errors }, setError } = useForm({
     resolver: yupResolver(schema),
   });
 
@@ -46,23 +46,23 @@ const Register = () => {
     <div className="register">
       <form onSubmit={handleSubmit(onSubmit)}>
         <label>First name: </label>
-        <input type="text" name="firstName" ref={register} />
+        <input type="text" name="firstName" {...register("firstName")} />
         <p>{errors.firstName?.message}</p>
 
         <label>Last name: </label>
-        <input type="text" name="lastName" ref={register} />
+        <input type="text" name="lastName" {...register("lastName")} />
         <p>{errors.lastName?.message}</p>
 
         <label>Email: </label>
-        <input type="text" name="email" ref={register} />
+        <input type="text" name="email" {...register("email")} />
         <p>{errors.email?.message}</p>
 
         <label>Password</label>
-        <input name="password" type="password" ref={register} />
+        <input name="password" type="password" {...register("password")} />
         <p>{errors.password?.message}</p>
 
         <label>Confirm password:</label>
-        <input name="confirmPassword" type="password" ref={register} />
+        <input name="confirmPassword" type="password" {...register("confirmPassword")} />
         <p>{errors.confirmPassword?.message}</p>
 
         <input type="submit" value="Register" />
