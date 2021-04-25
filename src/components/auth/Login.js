@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
-import { useWhyDidYouUpdate } from "ra-core";
 import { Redirect } from "react-router";
 
 let schema = yup.object().shape({
@@ -32,7 +31,12 @@ const Login = () => {
         return <Redirect to="/" />
       })
       .catch(error => {
-        console.log(error);
+        let errs = error.response.data.violations;
+        Object.keys(errs).forEach(key => {
+          setError(key, {
+            message: errs[key]
+          });
+        });
       })
   }
 

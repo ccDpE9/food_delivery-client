@@ -26,7 +26,7 @@ const Register = () => {
       .post("http://localhost:8080/register", data)
       .then((response) => {
         if (response.status < 200 || response.status >= 300) {
-          throw new Error(response);
+          throw new Error(response.statusText);
         } else {
           alert("You've registered successfully.");
           return <Redirect to="/" />;
