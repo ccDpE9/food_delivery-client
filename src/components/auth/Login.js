@@ -4,6 +4,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import { Redirect } from "react-router";
+import { useHistory } from "react-router-dom";
 
 let schema = yup.object().shape({
   email: yup.string().email(),
@@ -14,6 +15,7 @@ const Login = () => {
   const { register, handleSubmit, formState: { errors }, setError } = useForm({
     resolver: yupResolver(schema),
   })
+  let history = useHistory();
 
   const onSubmit = ({ email, password }) => {
     axios
@@ -28,7 +30,7 @@ const Login = () => {
           response.headers.authorization.split(" ")[1]
         )
 
-        return <Redirect to="/" />
+        history.push("/");
       })
       .catch(error => {
         let errs = error.response.data.violations;

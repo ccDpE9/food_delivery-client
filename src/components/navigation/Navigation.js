@@ -2,12 +2,15 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Cart from "../cart/Cart";
 import useCart from "../cart/useCart";
+import { useHistory } from "react-router-dom";
 
 const Navigation = () => {
   const { cartVisibility, toggle } = useCart();
+  let history = useHistory();
 
   const logout = () => {
     localStorage.removeItem("jwt");
+    history.push("/")
   }
 
   return (
