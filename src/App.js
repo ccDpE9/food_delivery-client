@@ -1,16 +1,25 @@
 import React from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-
-import Restaurants from "./components/restaurants/Restaurants";
-import Restaurant from "./components/restaurants/Restaurant";
-import Login from "./components/auth/Login";
-import Register from "./components/auth/Register";
-import Navigation from "./components/navigation/Navigation";
+import dataProvider from "components/admin/dataProvider";
+import Register from "components/auth/Register";
+import Navigation from "components/navigation/Navigation";
+import Restaurant from "components/restaurants/Restaurant";
+import Restaurants from "components/restaurants/Restaurants";
+import { ListGuesser } from "ra-ui-materialui";
+import { Admin, Resource } from "react-admin";
+import { Route, Switch } from "react-router";
+import authProvider from "components/admin/authProvider";
+import { BrowserRouter } from "react-router-dom";
+import Dashboard from "components/admin/Dashboard";
+import { MealsCreate } from "components/admin/meals/MealsCreate";
+import { MealsEdit } from "components/admin/meals/MealsEdit";
+import { MealShow } from "components/admin/meals/MealShow";
+import Login from "components/auth/Login";
+import Meal from "components/meals/Meal";
 
 function App() {
   return (
     <div className="App">
-      <Router>
+      <BrowserRouter>
         <Navigation />
         <Switch>
           <Route exact path="/">
@@ -26,8 +35,17 @@ function App() {
             path="/restaurant/:slug"
             render={(prop) => <Restaurant slug={prop} />}
           />
+          <Route
+            path="/meal/:slug"
+            render={prop => <Meal slug={prop} />}
+          />
+          <Route path="/admin">
+            <Admin dashboard={Dashboard} dataProvider={Object.assign(dataProvider)} authProvider={authProvider}>
+              <Resource name="meals" list={ListGuesser} create={MealsCreate} edit={MealsEdit} show={MealShow}></Resource>
+            </Admin>
+          </Route>
         </Switch>
-      </Router>
+      </BrowserRouter>
     </div>
   );
 }
